@@ -120,7 +120,6 @@ int main(int argc, char *argv[]){
 
     while(scanf("%d",&next) == 1){
 	process p;
-	p.involuntary = 0;
 	for(int i = 0; i < 3; i++){
 	    p.p_info[i] = next;
 	    if(i < 2){
@@ -134,11 +133,11 @@ int main(int argc, char *argv[]){
         total_burst += all_processes[i].p_info[1];
     }
     
-    printf("voluntary switches: %i\n", voluntary_switches(all_processes, n, p)-involuntary_switches(all_processes, n, p));
-    printf("involuntary switches: %i\n", involuntary_switches(all_processes, n, p));
+    printf("%i\n", voluntary_switches(all_processes, n, p)-involuntary_switches(all_processes, n, p));
+    printf("%i\n", involuntary_switches(all_processes, n, p));
     printf("100.0\n");
-    printf("throughput: %.2f\n", get_throughput(all_processes, n, p));
-    printf("avg turnaround time: %.2f\n", get_turnaround(all_processes, n, p, total_burst));
-    printf("avg waiting time: %.2f\n", get_waiting_time(all_processes, n, p));
-    printf("avg response time: %.2f\n", get_response_time(all_processes, n, p));
+    printf("%.2f\n", get_throughput(all_processes, n, p));
+    printf("%.2f\n", get_turnaround(all_processes, n, p, total_burst));
+    printf("%.2f\n", get_waiting_time(all_processes, n, p));
+    printf("%.2f\n", get_response_time(all_processes, n, p));
 }
