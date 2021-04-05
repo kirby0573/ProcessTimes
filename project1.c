@@ -13,7 +13,7 @@ typedef struct{
 
 float round_float(float f){
 
-    return ((int)(f * 100 + .5) / 100.0);
+    return ((f * 100 + .49) / 100.0);
 }
 
 // method not needed for this proj ** 
@@ -58,7 +58,6 @@ int voluntary_switches(process* p_arr, int size, int p){
 // method to find the number of involuntary switches
 int involuntary_switches(process* p_arr, int size, int p){
     int i_s = 0;
-
     for(int i = 0; i < size; i++){
         for(int j = i+1; j < size; j++){
             if(p_arr[i].p_info[0] == p_arr[j].p_info[0]){ //&& p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
@@ -79,24 +78,15 @@ int involuntary_switches(process* p_arr, int size, int p){
 
 // method to find the turnaround time
 float get_turnaround(process* p_arr, int size, int p, int burst_time){
-    int current_time=0;
+    float current_time=0;
     float total_waiting_time=0;
-    /*for(int i = 0; i < size-1; i++){
-        if(p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
-            current_time += p_arr[i].p_info[1];
-            total_waiting_time+=current_time;  
-        } else {
-	    current_time+=p_arr[i].p_info[1];
-	}
-    }*/
+
     for(int i = 0; i < size; i++){
 	current_time += p_arr[i].p_info[1];
         if(p_arr[i].has_later == 0){
             total_waiting_time+=current_time;
         }
     }
-    //turnaround time = total waiting time + total burst time
-    //total_waiting_time+=burst_time;
     float rounded = round_float(total_waiting_time/p);
     return rounded;
 }
