@@ -112,9 +112,10 @@ float get_response_time(process* p_arr, int size, int p, int unique){
 float get_waiting_time(process* p_arr, int size, int p, int unique){
     int current_time=0;
     float total_waiting_time=0;
-    for(int i = 0; i < size-1; i++){
-	if(p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
-	    current_time += p_arr[i].p_info[1];
+    for(int i = 1; i < size; i++){
+	if(p_arr[i].p_info[0] != p_arr[i-1].p_info[0]){
+	    //total_waiting_time+=current_time;
+	    current_time += p_arr[i-1].p_info[1];
 	    total_waiting_time+=current_time;
 	}
 	else {
