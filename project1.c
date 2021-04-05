@@ -8,12 +8,11 @@ typedef struct{
     int p_info[3];
     int repeated;
     int has_later;
-    int finish_time;
 }process;
 
 float round_float(float f){
 
-    return ((f * 100 + .49) / 100.0);
+    return ((int)(f * 100 + .5) / 100.0);
 }
 
 // method not needed for this proj ** 
@@ -87,7 +86,8 @@ float get_turnaround(process* p_arr, int size, int p, int burst_time){
             total_waiting_time+=current_time;
         }
     }
-    float rounded = round_float(total_waiting_time/p);
+    total_waiting_time/=p;
+    float rounded = round_float(total_waiting_time);
     return rounded;
 }
 
@@ -110,16 +110,7 @@ float get_response_time(process* p_arr, int size, int p, int unique){
 float get_waiting_time(process* p_arr, int size, int p, int unique, int total_burst){
     int current_time=0;
     float total_waiting_time=0;
-    /*for(int i = 0; i < size-1; i++){
-	if(p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
-	    //total_waiting_time+=current_time;
-	    current_time += p_arr[i].p_info[1];
-	    total_waiting_time+=current_time;
-	}
-	else {
-            current_time+=p_arr[i].p_info[1];
-        }
-    }*/
+    
     for(int i = 0; i < size; i++){
         current_time += p_arr[i].p_info[1];
         if(p_arr[i].has_later == 0){
@@ -127,7 +118,9 @@ float get_waiting_time(process* p_arr, int size, int p, int unique, int total_bu
         }
     }
     total_waiting_time-=total_burst;
-    float rounded = round_float((total_waiting_time/unique));
+    total_waiting_time = round_float(total_waiting_time);
+    total_waiting_time/=unique;
+    float rounded = round_float(total_waiting_time);
     return rounded;
 }
 
