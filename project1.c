@@ -59,7 +59,7 @@ int voluntary_switches(process* p_arr, int size){
 int involuntary_switches(process* p_arr, int size){
     int i_s = 0;
     for(int k = 0; k < size; k++){
-	if(p_arr[k].repeated > 0){
+	if(p_arr[k].has_later > 0){
 	    i_s++;
 
 	    // deals with similar adjacent PIDs
