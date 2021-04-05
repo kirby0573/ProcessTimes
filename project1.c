@@ -11,7 +11,7 @@ typedef struct{
 // rounds a decimal to two decimal places
 double round_double(double d){
 
-    return ((int)(d * 100 + .5) / 100.0);
+    return ((int)(d * 100 + .49) / 100.0);
 }
 
 // method not needed for this proj ** 
