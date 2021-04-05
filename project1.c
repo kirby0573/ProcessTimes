@@ -162,7 +162,7 @@ int main(int argc, char *argv[]){
     
     printf("%i\n", unique_occurrences);
     printf("%i\n", involuntary_switches(all_processes, n, p));
-    printf("100.0\n");
+    printf("100.00\n");
     //printf("%i\n", all_processes[4].repeated);
     printf("%.2f\n", get_throughput(all_processes, n, p));
     printf("%.2f\n", get_turnaround(all_processes, n, p, total_burst));
