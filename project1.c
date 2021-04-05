@@ -94,12 +94,17 @@ float get_turnaround(process* p_arr, int size, int p, int burst_time){
 }
 
 // method to find the average response time
-float get_response_time(process* p_arr, int size, int p){
-    float r = 0;
-    for(int i = 1; i < size; i++){
-	r += p_arr[i-1].p_info[1];
+float get_response_time(process* p_arr, int size, int p, int unique){
+    int current_time=0;
+    float total_waiting_time=0;
+    for(int i = 0; i < size; i++){
+        if(p_arr[i].repeated == 0){
+	    total_waiting_time+=current_time;
+            current_time += p_arr[i].p_info[1];
+        }
     }
-    float rounded = ((int)((r/(size-1)) * 100 + .5) / 100.0);
+    //printf("total waiting time for response: %f\n", total_waiting_time);
+    float rounded = round_float((total_waiting_time/unique));
     return rounded;
 }
 
@@ -157,10 +162,10 @@ int main(int argc, char *argv[]){
     
     printf("%i\n", unique_occurrences);
     printf("%i\n", involuntary_switches(all_processes, n, p));
-    //printf("%i\n", n - unique_occurrences-1);
     printf("100.0\n");
+    //printf("%i\n", all_processes[4].repeated);
     printf("%.2f\n", get_throughput(all_processes, n, p));
     printf("%.2f\n", get_turnaround(all_processes, n, p, total_burst));
     printf("%.2f\n", get_waiting_time(all_processes, n, p, unique_occurrences));
-    printf("%.2f\n", get_response_time(all_processes, n, p));
+    printf("%.2f\n", get_response_time(all_processes, n, p, unique_occurrences));
 }
