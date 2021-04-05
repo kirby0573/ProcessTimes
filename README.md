@@ -11,8 +11,8 @@ If no test file is given, it will read from stdin
 Notes:  
 -Sources used given in COLLABORATORS file  
 -Used a printf for the CPU utilization  
--No known bugs  
+-No known bugs (apart from the 1 test on gradescope that is .01 off from the correct output, but everything else is outputting as it should be)  
 -Only assumptions that were made were given in the project description (p and N <= 2^15, etc)  
 -My program has get functions corresponding to each of the lines of output  
-i.e. get_throughput() returns the throughput for the given process set, and so on. . .  
+i.e. get_throughput() returns the throughput for the given process set, and so on  
 

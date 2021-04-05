@@ -11,7 +11,7 @@ typedef struct{
 // rounds a decimal to two decimal places
 double round_double(double d){
 
-    return ((int)(d * 100 + .49) / 100.0);
+    return ((int)(d * 100 + .5) / 100.0);
 }
 
 // method not needed for this proj ** 
@@ -37,13 +37,14 @@ double get_throughput(process* p_arr, int size, int p){
 }
 
 // method to find the number of voluntary switches
-int voluntary_switches(process* p_arr, int size, int p){
+int voluntary_switches(process* p_arr, int size){
     // want to look for number of unique elements
     int num_unique = 0;
     for(int i = 0; i < size; i++){
 	for(int j = i+1; j < size; j++){
 	    if(p_arr[i].p_info[0] == p_arr[j].p_info[0]){
 		p_arr[j].repeated = 1;
+		p_arr[i].has_later = 1;
 	    }
 	}
 	if(p_arr[i].repeated < 1){
@@ -55,17 +56,10 @@ int voluntary_switches(process* p_arr, int size, int p){
 
 // method to find the number of involuntary switches
 // looks for processes that occur more than once and counts them all in the end
-int involuntary_switches(process* p_arr, int size, int p){
+int involuntary_switches(process* p_arr, int size){
     int i_s = 0;
-    for(int i = 0; i < size; i++){
-        for(int j = i+1; j < size; j++){
-            if(p_arr[i].p_info[0] == p_arr[j].p_info[0]){ 
-                p_arr[i].has_later = 1;
-            }
-        }
-    }
     for(int k = 0; k < size; k++){
-	if(p_arr[k].has_later > 0){
+	if(p_arr[k].repeated > 0){
 	    i_s++;
 
 	    // deals with similar adjacent PIDs
@@ -96,7 +90,7 @@ double get_turnaround(process* p_arr, int size, int p, int burst_time){
 
 // method to find the average response time
 // only looking for the first occurrence of each unique PID
-double get_response_time(process* p_arr, int size, int p, int unique){
+double get_response_time(process* p_arr, int size, int unique){
     int current_time=0;
     double total_waiting_time=0;
     for(int i = 0; i < size; i++){
@@ -112,7 +106,7 @@ double get_response_time(process* p_arr, int size, int p, int unique){
 
 // method to find the average waiting time
 // used the formula waiting time = turnaround time - burst time
-double get_waiting_time(process* p_arr, int size, int p, int unique, int total_burst){
+double get_waiting_time(process* p_arr, int size, int unique, int total_burst){
     int current_time=0;
     double total_waiting_time=0;
     
@@ -159,13 +153,13 @@ int main(int argc, char *argv[]){
     for(int i=0; i < n; i++){
         total_burst += all_processes[i].p_info[1];
     }
-    int unique_occurrences = voluntary_switches(all_processes, n, p);
+    int unique_occurrences = voluntary_switches(all_processes, n);
     
     printf("%i\n", unique_occurrences);
-    printf("%i\n", involuntary_switches(all_processes, n, p));
+    printf("%i\n", involuntary_switches(all_processes, n));
     printf("100.00\n");
     printf("%.2f\n", get_throughput(all_processes, n, p));
     printf("%.2f\n", get_turnaround(all_processes, n, p, total_burst));
-    printf("%.2f\n", get_waiting_time(all_processes, n, p, unique_occurrences, total_burst));
-    printf("%.2f\n", get_response_time(all_processes, n, p, unique_occurrences));
+    printf("%.2f\n", get_waiting_time(all_processes, n, unique_occurrences, total_burst));
+    printf("%.2f\n", get_response_time(all_processes, n, unique_occurrences));
 }
