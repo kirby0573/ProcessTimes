@@ -7,6 +7,7 @@ typedef struct{
     // <pid> <burst> <priority>	
     int p_info[3];
     int repeated;
+    int has_later;
 
 }process;
 
@@ -57,11 +58,17 @@ int voluntary_switches(process* p_arr, int size, int p){
 // method to find the number of involuntary switches
 int involuntary_switches(process* p_arr, int size, int p){
     int i_s = 0;
+
     for(int i = 0; i < size; i++){
-	for(int j = i+1; j < size; j++){
-	    if(p_arr[i].p_info[0] == p_arr[j].p_info[0] && p_arr[j].p_info[0] != p_arr[j-1].p_info[0]){
-		i_s++;
-	    }
+        for(int j = i+1; j < size; j++){
+            if(p_arr[i].p_info[0] == p_arr[j].p_info[0] && p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
+                p_arr[i].has_later = 1;
+            }
+        }
+    }
+    for(int k = 0; k < size; k++){
+	if(p_arr[k].has_later > 0){
+	    i_s++;
 	}
     }
     return i_s;
@@ -117,14 +124,12 @@ float get_waiting_time(process* p_arr, int size, int p, int unique){
 int main(int argc, char *argv[]){
     
     int P,p,n;
-
     FILE *input;
     if(argc > 1){
 	input = fopen(argv[1], "r");
     } else{
 	input = stdin;
     }
-    //else{
     fscanf(input, "%d",&P);
     fscanf(input, "%d",&p);
     fscanf(input, "%d",&n);
@@ -135,6 +140,7 @@ int main(int argc, char *argv[]){
     while(fscanf(input,"%d",&next) == 1){
 	process p;
 	p.repeated = 0;
+	p.has_later = 0;
 	for(int i = 0; i < 3; i++){
 	    p.p_info[i] = next;
 	    if(i < 2){
@@ -143,7 +149,6 @@ int main(int argc, char *argv[]){
 	}
 	all_processes[idx++] = p;
     }
-    //}
     int total_burst = 0;
     for(int i=0; i < n; i++){
         total_burst += all_processes[i].p_info[1];
@@ -152,6 +157,7 @@ int main(int argc, char *argv[]){
     
     printf("%i\n", unique_occurrences);
     printf("%i\n", involuntary_switches(all_processes, n, p));
+    //printf("%i\n", n - unique_occurrences-1);
     printf("100.0\n");
     printf("%.2f\n", get_throughput(all_processes, n, p));
     printf("%.2f\n", get_turnaround(all_processes, n, p, total_burst));
