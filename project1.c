@@ -8,7 +8,7 @@ typedef struct{
     int p_info[3];
     int repeated;
     int has_later;
-
+    int finish_time;
 }process;
 
 float round_float(float f){
@@ -61,7 +61,7 @@ int involuntary_switches(process* p_arr, int size, int p){
 
     for(int i = 0; i < size; i++){
         for(int j = i+1; j < size; j++){
-            if(p_arr[i].p_info[0] == p_arr[j].p_info[0] && p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
+            if(p_arr[i].p_info[0] == p_arr[j].p_info[0]){ //&& p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
                 p_arr[i].has_later = 1;
             }
         }
@@ -69,6 +69,9 @@ int involuntary_switches(process* p_arr, int size, int p){
     for(int k = 0; k < size; k++){
 	if(p_arr[k].has_later > 0){
 	    i_s++;
+	    if(p_arr[k].p_info[0] == p_arr[k+1].p_info[0]){
+		i_s--;
+	    }
 	}
     }
     return i_s;
@@ -78,17 +81,22 @@ int involuntary_switches(process* p_arr, int size, int p){
 float get_turnaround(process* p_arr, int size, int p, int burst_time){
     int current_time=0;
     float total_waiting_time=0;
-    for(int i = 0; i < size-1; i++){
+    /*for(int i = 0; i < size-1; i++){
         if(p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
             current_time += p_arr[i].p_info[1];
             total_waiting_time+=current_time;  
         } else {
 	    current_time+=p_arr[i].p_info[1];
 	}
+    }*/
+    for(int i = 0; i < size; i++){
+	current_time += p_arr[i].p_info[1];
+        if(p_arr[i].has_later == 0){
+            total_waiting_time+=current_time;
+        }
     }
-
     //turnaround time = total waiting time + total burst time
-    total_waiting_time+=burst_time;
+    //total_waiting_time+=burst_time;
     float rounded = round_float(total_waiting_time/p);
     return rounded;
 }
@@ -109,20 +117,26 @@ float get_response_time(process* p_arr, int size, int p, int unique){
 }
 
 // method to find the average waiting time
-float get_waiting_time(process* p_arr, int size, int p, int unique){
+float get_waiting_time(process* p_arr, int size, int p, int unique, int total_burst){
     int current_time=0;
     float total_waiting_time=0;
-    for(int i = 1; i < size; i++){
-	if(p_arr[i].p_info[0] != p_arr[i-1].p_info[0]){
+    /*for(int i = 0; i < size-1; i++){
+	if(p_arr[i].p_info[0] != p_arr[i+1].p_info[0]){
 	    //total_waiting_time+=current_time;
-	    current_time += p_arr[i-1].p_info[1];
+	    current_time += p_arr[i].p_info[1];
 	    total_waiting_time+=current_time;
 	}
 	else {
             current_time+=p_arr[i].p_info[1];
         }
+    }*/
+    for(int i = 0; i < size; i++){
+        current_time += p_arr[i].p_info[1];
+        if(p_arr[i].has_later == 0){
+            total_waiting_time+=current_time;
+        }
     }
-    // 
+    total_waiting_time-=total_burst;
     float rounded = round_float((total_waiting_time/unique));
     return rounded;
 }
@@ -167,6 +181,6 @@ int main(int argc, char *argv[]){
     //printf("%i\n", all_processes[4].repeated);
     printf("%.2f\n", get_throughput(all_processes, n, p));
     printf("%.2f\n", get_turnaround(all_processes, n, p, total_burst));
-    printf("%.2f\n", get_waiting_time(all_processes, n, p, unique_occurrences));
+    printf("%.2f\n", get_waiting_time(all_processes, n, p, unique_occurrences, total_burst));
     printf("%.2f\n", get_response_time(all_processes, n, p, unique_occurrences));
 }
