@@ -8,9 +8,10 @@ typedef struct{
     int has_later;
 }process;
 
-float round_float(float f){
+// rounds a decimal to two decimal places
+double round_double(double d){
 
-    return ((int)(f * 100 + .5) / 100.0);
+    return ((int)(d * 100 + .5) / 100.0);
 }
 
 // method not needed for this proj ** 
@@ -26,12 +27,12 @@ int compare_priority(const void* p1, const void* p2){
 }
 
 // method to find the throughput
-float get_throughput(process* p_arr, int size, int p){
-    float total_burst_time = 0;
+double get_throughput(process* p_arr, int size, int p){
+    double total_burst_time = 0;
     for(int i=0; i < size; i++){
 	total_burst_time += p_arr[i].p_info[1];
     }
-    float rounded = round_float((p/total_burst_time));
+    double rounded = round_double((p/total_burst_time));
     return rounded;
 }
 
@@ -78,9 +79,9 @@ int involuntary_switches(process* p_arr, int size, int p){
 
 // method to find the turnaround time
 // used the formula turnaround = completion time - arrival time (arrival time is 0)
-float get_turnaround(process* p_arr, int size, int p, int burst_time){
+double get_turnaround(process* p_arr, int size, int p, int burst_time){
     int current_time=0;
-    float total_waiting_time=0;
+    double total_waiting_time=0;
 
     for(int i = 0; i < size; i++){
 	current_time += p_arr[i].p_info[1];
@@ -89,15 +90,15 @@ float get_turnaround(process* p_arr, int size, int p, int burst_time){
         }
     }
 
-    float rounded = round_float(total_waiting_time/p);
+    double rounded = round_double(total_waiting_time/p);
     return rounded;
 }
 
 // method to find the average response time
 // only looking for the first occurrence of each unique PID
-float get_response_time(process* p_arr, int size, int p, int unique){
+double get_response_time(process* p_arr, int size, int p, int unique){
     int current_time=0;
-    float total_waiting_time=0;
+    double total_waiting_time=0;
     for(int i = 0; i < size; i++){
         if(p_arr[i].repeated == 0){
 	    total_waiting_time+=current_time;
@@ -105,15 +106,15 @@ float get_response_time(process* p_arr, int size, int p, int unique){
         }
     }
     
-    float rounded = round_float((total_waiting_time/unique));
+    double rounded = round_double((total_waiting_time/unique));
     return rounded;
 }
 
 // method to find the average waiting time
 // used the formula waiting time = turnaround time - burst time
-float get_waiting_time(process* p_arr, int size, int p, int unique, int total_burst){
+double get_waiting_time(process* p_arr, int size, int p, int unique, int total_burst){
     int current_time=0;
-    float total_waiting_time=0;
+    double total_waiting_time=0;
     
     for(int i = 0; i < size; i++){
         current_time += p_arr[i].p_info[1];
@@ -122,7 +123,7 @@ float get_waiting_time(process* p_arr, int size, int p, int unique, int total_bu
         }
     }
     total_waiting_time-=total_burst;
-    float rounded = round_float((total_waiting_time/unique));
+    double rounded = round_double((total_waiting_time/unique));
     return rounded;
 }
 
