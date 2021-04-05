@@ -1,0 +1,3 @@
+Youtube | https://www.youtube.com/watch?v=KDjTNvuYC8Y | helped me understand turnaround and waiting time
+StackOverflow | https://stackoverflow.com/questions/1343890/how-do-i-restrict-a-float-value-to-only-two-places-after-the-decimal-point-in-c | helped me round floats to two decimal points
+Cprogramming | https://faq.cprogramming.com/cgi-bin/smartfaq.cgi?answer=1043372399&id=1043284385 | helped me understand fscanf
